@@ -1,0 +1,17 @@
+/* hide the sidebar by setting it's display to none. */
+#sidebarContainer {
+	display: none;
+}
+
+/* change the content containers margin to 0px so that it flows full width */
+
+#contentContainer {
+	width: auto;
+	margin: 0px;
+	float: none;
+}
+
+#contentContainer #content {
+	padding-right: 20px;
+	padding-left: 28px;
+}

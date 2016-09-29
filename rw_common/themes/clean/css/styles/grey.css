@@ -1,0 +1,47 @@
+a:link, a:visited {
+	color: #000000;
+}
+
+a:hover, a:active {
+	color: #333333;
+}
+
+#pageHeader h2 {
+	color: #656459;
+}
+
+#sidebarContainer .sideHeader {
+	color: #656459;
+}
+
+#navcontainer {
+	background: repeat-x url(../../images/grey/navcontainer_bg.png);
+}
+
+#navcontainer #current {
+	background: no-repeat url(../../images/grey/button_over.png);
+	color: #333333;
+}
+
+#navcontainer .currentAncestor {
+	background: no-repeat url(../../images/grey/button_over.png);
+	color: #333333;
+}
+
+#navcontainer a {
+	background: no-repeat url(../../images/grey/button_normal.png);
+	color: #7f7f7f;
+}
+
+#navcontainer a:hover {
+	background: no-repeat url(../../images/grey/button_over.png);
+	color: #333333;
+}
+
+.blog-entry-title {
+	color: #333333;
+}
+
+.movie-title {
+	color: #333333;
+}
