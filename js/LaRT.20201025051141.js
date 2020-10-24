@@ -17,7 +17,7 @@ if(!window.HTMLPictureElement){r();}
 (function(){$('a[href^="#"]:not(.allowConsent,.noConsent,.denyConsent,.removeConsent)').each(function(i,e){$(e).click(function(){var t=e.hash.length>1?$('[name="'+e.hash.slice(1)+'"]').offset().top:0;return $("html, body").animate({scrollTop:t},400),!1})})})();
 $('.js72').click(function(e) {
 e.preventDefault();
-$('.js70').html("<video class=\"video\" loop controls autoplay class=\"videoinline\"><source src=\"video/t1tau3_rec111_ani.mp4\" type=\"video/mp4\"></video>");
+$('.js70').html("<video class=\"video\" loop controls autoplay class=\"videoinline\"><source src=\"video/t1tau3_cub111_ani.mp4\" type=\"video/mp4\"></video>");
 });
 
 });
