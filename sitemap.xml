@@ -1,30 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-	<url>
-		<loc>http://seoncafe.github.io/Welcome.html</loc>
-	</url>
-	<url>
-		<loc>http://seoncafe.github.io/CV.html</loc>
-	</url>
-	<url>
-		<loc>http://seoncafe.github.io/Reseach.html</loc>
-	</url>
-	<url>
-		<loc>http://seoncafe.github.io/Publications.html</loc>
-	</url>
-	<url>
-		<loc>http://seoncafe.github.io/FIMS.html</loc>
-	</url>
-	<url>
-		<loc>http://seoncafe.github.io/MoCafe.html</loc>
-	</url>
-	<url>
-		<loc>http://seoncafe.github.io/LaRT.html</loc>
-	</url>
-	<url>
-		<loc>http://seoncafe.github.io/Teaching.html</loc>
-	</url>
-	<url>
-		<loc>http://seoncafe.github.io/Links.html</loc>
-	</url>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+<url><loc>https://seoncafe.github.io/</loc></url>
+<url><loc>https://seoncafe.github.io/CV.html</loc></url>
+<url><loc>https://seoncafe.github.io/Reseach.html</loc></url>
+<url><loc>https://seoncafe.github.io/Publications.html</loc></url>
+<url><loc>https://seoncafe.github.io/FIMS.html</loc></url>
+<url><loc>https://seoncafe.github.io/MoCafe.html</loc></url>
+<url><loc>https://seoncafe.github.io/LaRT.html</loc></url>
+<url><loc>https://seoncafe.github.io/Teaching.html</loc></url>
+<url><loc>https://seoncafe.github.io/Links.html</loc></url>
 </urlset>
