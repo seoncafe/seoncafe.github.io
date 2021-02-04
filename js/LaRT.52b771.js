@@ -13,12 +13,12 @@ var e=document.querySelector('.js66');e.setAttribute('src',(dpi>1)?'images/butto
 var e=document.querySelector('.js67');e.setAttribute('src',(dpi>1)?'images/button_normal-264-1.png':'images/button_normal-132-1.png');
 var e=document.querySelector('.js68');e.setAttribute('src',(dpi>1)?'images/button_normal-264-1.png':'images/button_normal-132-1.png');
 var e=document.querySelector('.js69');e.setAttribute('src',(dpi>1)?'images/button_normal-264-1.png':'images/button_normal-132-1.png');
-var e=document.querySelector('.js71');e.setAttribute('src',(dpi>1)?'images/poster-1184-4.jpg':'images/poster-592-3.jpg');};
+var e=document.querySelector('.js70');e.setAttribute('src',(dpi>1)?'images/poster-1184-4.jpg':'images/poster-592-3.jpg');};
 if(!window.HTMLPictureElement){r();}
 (function(){$('a[href^="#"]:not(.allowConsent,.noConsent,.denyConsent,.removeConsent)').each(function(i,e){$(e).click(function(){var t=e.hash.length>1?$('[name="'+e.hash.slice(1)+'"]').offset().top:0;return $("html, body").animate({scrollTop:t},400),!1})})})();
-$('.js72').click(function(e) {
+$('.js71').click(function(e) {
 e.preventDefault();
-$('.js70').html("<video class=\"video1\" loop controls autoplay class=\"videoinline\"><source src=\"video/t1tau3_cub111_ani.mp4\" type=\"video/mp4\"></video>");
+$('.js72').html("<video class=\"video1\" loop controls autoplay class=\"videoinline\"><source src=\"video/t1tau3_cub111_ani.mp4\" type=\"video/mp4\"></video>");
 });
 
 });
