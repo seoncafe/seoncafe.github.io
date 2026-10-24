@@ -93,13 +93,21 @@ def update(root=ROOT, today=None):
             reader = csv.DictReader(stream)
             if reader.fieldnames != FIELDS:
                 raise ValueError(f'{source}: columns must be {FIELDS}')
-            rows = list(reader)
+            rows = []
+            for row in reader:
+                if None in row or any(value is None for value in row.values()):
+                    count = (len(FIELDS) + len(row.get(None, []))
+                             - sum(value is None for value in row.values()))
+                    raise ValueError(
+                        f'{source}:{reader.line_num}: incorrect CSV field count '
+                        f'(expected {len(FIELDS)}, got {count}). '
+                        'Wrap fields containing commas in double quotes.'
+                    )
+                rows.append(row)
         state_path = folder / '.pdf-hashes.json'
         old = json.loads(state_path.read_text(encoding='utf-8')) if state_path.exists() else {}
         state, numbers = {}, set()
         for row in rows:
-            if None in row or any(value is None for value in row.values()):
-                raise ValueError(f'{source}: incorrect CSV field count')
             number = int(row['lecture'])
             if number < 1 or number in numbers or not row['title'].strip():
                 raise ValueError(f'{source}: duplicate/invalid lecture number or empty title')

@@ -71,6 +71,31 @@ class TeachingTests(unittest.TestCase):
             teaching.update(self.root)
         self.assertTrue(all(p.read_bytes() == data for p, data in before.items()))
 
+    def test_quoted_title_with_commas_and_newline(self):
+        rows = self.rows()
+        rows[0]['title'] = 'Clouds, Hazes,\nand Scattering'
+        self.write_rows(rows)
+        teaching.update(self.root)
+        self.assertEqual(self.rows()[0]['title'], rows[0]['title'])
+        self.assertIn(rows[0]['title'], (self.root / 'Teaching.html').read_text())
+
+    def test_csv_field_count_reports_line_and_changes_no_files(self):
+        cases = [
+            ('1,,,Clouds, Hazes, and Scattering,lecture01.pdf,', 8),
+            ('1,,,Introduction,lecture01.pdf', 5),
+        ]
+        for record, count in cases:
+            with self.subTest(count=count):
+                (self.folder / 'lectures.csv').write_text(
+                    ','.join(teaching.FIELDS) + '\n' + record + '\n')
+                before = {p: p.read_bytes() for p in self.root.rglob('*') if p.is_file()}
+                with self.assertRaises(ValueError) as error:
+                    teaching.update(self.root)
+                self.assertIn(f'lectures.csv:2: incorrect CSV field count (expected 6, got {count})',
+                              str(error.exception))
+                self.assertIn('double quotes', str(error.exception))
+                self.assertEqual(before, {p: p.read_bytes() for p in self.root.rglob('*') if p.is_file()})
+
     def test_rename_stamps_date_and_duplicate_number_rejected(self):
         (self.folder / 'lecture01.pdf').write_bytes(b'%PDF original')
         teaching.update(self.root, date(2027, 3, 1))
