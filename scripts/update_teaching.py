@@ -6,6 +6,7 @@ import hashlib
 import html
 import io
 import json
+import subprocess
 from datetime import date, datetime
 from pathlib import Path
 from urllib.parse import quote
@@ -71,8 +72,7 @@ def render_course(course, rows, folder, root, hashes):
     return '\n'.join(lines)
 
 
-def update(root=ROOT, today=None):
-    today = today or datetime.now(ZoneInfo('Asia/Seoul')).date()
+def update(root=ROOT):
     target = root / 'Teaching.html'
     page = target.read_text(encoding='utf-8')
     if page.count(START) != 1 or page.count(END) != 1:
@@ -105,7 +105,6 @@ def update(root=ROOT, today=None):
                     )
                 rows.append(row)
         state_path = folder / '.pdf-hashes.json'
-        old = json.loads(state_path.read_text(encoding='utf-8')) if state_path.exists() else {}
         state, numbers = {}, set()
         for row in rows:
             number = int(row['lecture'])
@@ -121,9 +120,11 @@ def update(root=ROOT, today=None):
             digest = hashlib.sha256(pdf.read_bytes()).hexdigest() if pdf and pdf.is_file() else None
             if row['pdf']:
                 state[row['pdf']] = digest
-            if digest and ((state_path.exists() and old.get(row['pdf']) != digest) or not row['updated']):
-                row['updated'] = today.isoformat()
-                messages.append(f'{folder.name}: Lecture {number:02d} updated {today}')
+            if digest:
+                modified = datetime.fromtimestamp(pdf.stat().st_mtime, ZoneInfo('Asia/Seoul')).date().isoformat()
+                if row['updated'] != modified:
+                    row['updated'] = modified
+                    messages.append(f'{folder.name}: Lecture {number:02d} updated {modified} (PDF modified date)')
             if not digest:
                 messages.append(f'{folder.name}: Lecture {number:02d} PDF pending (shown without a link)')
         rows.sort(key=lambda row: int(row['lecture']))
@@ -158,6 +159,37 @@ def new_course(root, slug, title, term, schedule, sort_date):
                                                         pdf='lecture01.pdf', updated='')]), encoding='utf-8')
 
 
+def publish(root=ROOT, message='Update lecture notes and teaching schedule'):
+    """Commit managed teaching files and push the current branch to origin."""
+    def git(*args):
+        result = subprocess.run(['git', *args], cwd=root, text=True, capture_output=True)
+        if result.returncode:
+            raise ValueError(f'git {args[0]} failed: {result.stderr.strip() or result.stdout.strip()}')
+        return result.stdout.strip()
+
+    branch = git('symbolic-ref', '--short', 'HEAD')
+    git('remote', 'get-url', 'origin')
+    paths = {'Teaching.html'}
+    for config in (root / 'Teaching_files').glob('*/course.json'):
+        folder = config.parent
+        paths.update((folder / name).relative_to(root).as_posix()
+                     for name in ['course.json', 'lectures.csv', '.pdf-hashes.json'])
+        with (folder / 'lectures.csv').open(encoding='utf-8-sig', newline='') as stream:
+            for row in csv.DictReader(stream):
+                if row['pdf']:
+                    paths.add((folder / row['pdf']).resolve().relative_to(root.resolve()).as_posix())
+    tracked = set(git('ls-files', '-z', '--', *sorted(paths)).split('\0'))
+    paths = sorted(path for path in paths if (root / path).exists() or path in tracked)
+    git('add', '-A', '--', *paths)
+    if git('diff', '--cached', '--name-only', '--', *paths):
+        # --only preserves unrelated staged changes and excludes them from this commit.
+        print(git('commit', '--only', '-m', message, '--', *paths))
+    else:
+        print('No teaching changes to commit; pushing any pending commits.')
+    print(git('push', 'origin', f'HEAD:refs/heads/{branch}'))
+    print(f'Pushed to origin/{branch}. GitHub Pages will update after deployment.')
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--new-course', metavar='FOLDER', help='Create course metadata and CSV; then regenerate the page')
@@ -165,6 +197,8 @@ def main():
     parser.add_argument('--term', help='e.g. Spring, 2027')
     parser.add_argument('--schedule')
     parser.add_argument('--sort-date', help='Semester start, YYYY-MM-DD; newest course first')
+    parser.add_argument('--publish', action='store_true', help='After updating, commit teaching files and push to origin')
+    parser.add_argument('--message', default='Update lecture notes and teaching schedule', help='Commit message for --publish')
     args = parser.parse_args()
     try:
         if args.new_course:
@@ -175,6 +209,8 @@ def main():
         for message in messages:
             print(message)
         print('Changed: ' + ', '.join(changed) if changed else 'No changes.')
+        if args.publish:
+            publish(message=args.message)
     except (ValueError, OSError, KeyError, TypeError) as error:
         parser.exit(1, f'Error: {error}\n')
 

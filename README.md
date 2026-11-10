@@ -31,10 +31,12 @@ lists, image scaling, and both LaRT video controls at mobile and desktop widths.
 ## Teaching content
 
 Run `python3 scripts/update_teaching.py` after editing lecture PDFs or course
-metadata. The current Exoplanetary Atmospheres course and new courses use
+metadata. Add `--publish` to commit teaching changes and push to GitHub:
+`python3 scripts/update_teaching.py --publish`. The current Exoplanetary Atmospheres course and new courses use
 `Teaching_files/<course>/course.json` and `lectures.csv`; older course archives
-remain in the HTML. The script tracks PDF contents, updates dates in Korea time,
-and renders the managed course section as static HTML.
+remain in the HTML. The script uses each PDF’s filesystem modification date in Korea time for
+update dates, hashes its contents for cache versioning, and renders the managed
+course section as static HTML.
 
 See [Teaching 관리 안내](docs/TEACHING_GUIDE.md) for PDF replacement, schedule
 changes, new lectures, new courses, local preview, and publishing instructions.
